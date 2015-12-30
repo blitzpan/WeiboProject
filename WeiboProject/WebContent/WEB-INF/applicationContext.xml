@@ -33,7 +33,7 @@
 	ref参数指定的即任务类，method指定的即需要运行的方法，cron及cronExpression表达式，具体写法这里不介绍了，详情见上篇文章附录。
 	 -->
 	<task:scheduled-tasks> 
-		<task:scheduled ref="weiboTask" method="transmit" cron="0 0/2 * * * ?"/>
+		<task:scheduled ref="weiboTask" method="repost" cron="0 0/1 * * * ?"/>
 	</task:scheduled-tasks>
 	<!---->
 	<!-- 加载数据库配置文件 -->
