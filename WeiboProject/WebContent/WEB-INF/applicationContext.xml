@@ -18,33 +18,29 @@
 	 -->
 	<mvc:annotation-driven />
 	<!-- 扫描注解 -->
-	<context:component-scan base-package="com.jiapu.*,com.novel.*,com.weibo.*,com.junxun.*,com.common.*"></context:component-scan>
+	<context:component-scan base-package="com.myweibo.*"></context:component-scan>
 	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/" /> <!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑 -->
 		<property name="suffix" value=".jsp"/>
 	</bean>
 	
 	<!-- 在那些不能使用注入功能的类的时候，用此工具，来获取spring托管的类 -->
-	<bean id="SpringContextUtil" class="com.novel.util.SpringContextUtil"/>
+	<bean id="SpringContextUtil" class="com.myweibo.utils.SpringContextUtil"/>
 
 	<!-- 配置定时任务开始 -->
 	<!-- 
 	详细说明：
 	ref参数指定的即任务类，method指定的即需要运行的方法，cron及cronExpression表达式，具体写法这里不介绍了，详情见上篇文章附录。
 	 -->
-	<!-- 
 	<task:scheduled-tasks> 
-		<task:scheduled ref="catchTianyaTask" method="job1" cron="0 0/50 * * * ?"/>
-		<task:scheduled ref="sendMailTask" method="sendMail" cron="0 0/70 * * * ?"/>
-		<task:scheduled ref="weiboTask" method="sendWeibo" cron="0 0/50 * * * ?"/>
+		<task:scheduled ref="weiboTask" method="transmit" cron="0 0/2 * * * ?"/>
 	</task:scheduled-tasks>
-	 -->
 	<!---->
 	<!-- 加载数据库配置文件 -->
 	<!-- 加载邮件配置文件，之所以不写两个placeholder，是因为两个的话只加载了第一个，第二个没反应。
 	应该把两个properties文件放在一个location中，当中用逗号分隔
 	 -->
-    <context:property-placeholder location="classpath:jdbc.properties,classpath:mail.properties" />
+    <context:property-placeholder location="classpath:jdbc.properties" />
     
 	<!-- 定义数据源 -->
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
@@ -98,47 +94,4 @@
     </bean>
     <!-- 在网上抄的配置事务，不明白 -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
-    
-	<!-- 配置邮件信息 -->
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host">
-			<value>${mail.host}</value>
-		</property>
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.smtp.auth">${mail.auth}</prop>
-				<prop key="mail.smtp.timeout">${mail.timeout}</prop>
-			</props>
-		</property>
-		<property name="username">
-			<value>${mail.username}</value>
-		</property>
-		<property name="password">
-			<value>${mail.password}</value>
-		</property>
-	</bean>
-	<!-- 配置邮件信息结束 -->
-	<!-- 配置邮件模板开始 -->
-	<bean id="freemarkerConfiguration" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
-		<property name="templateLoaderPaths">
-			<list>
-				<value>/WEB-INF/mail/</value>
-			</list>
-		</property>
-		<property name="freemarkerSettings">
-			<props>
-				<prop key="default_encoding">gbk</prop>
-				<prop key="output_encoding">gbk</prop>
-				<prop key="locale">en_US</prop>
-				<prop key="number_format">#</prop>
-				<prop key="whitespace_stripping">true</prop>
-				<prop key="classic_compatible">true</prop><!-- 此属性可以防止模板解析空值时的错误  -->
-				<!--刷新模板的周期，单位为秒-->
-				<!--   
-				<prop key="template_update_delay">0</prop> 
-				-->
-			</props>  
-		</property>  
-	</bean>  
-	<!-- 配置邮件模板结束 -->
 </beans>
