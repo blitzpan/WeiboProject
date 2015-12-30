@@ -1127,5 +1127,4 @@ public class Timeline extends Weibo {
 				new PostParameter[] { new PostParameter("ids", ids) },
 				access_token).asJSONArray();
 	}
-
 }
