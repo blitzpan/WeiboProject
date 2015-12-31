@@ -34,6 +34,8 @@
 	 -->
 	<task:scheduled-tasks> 
 		<task:scheduled ref="weiboTask" method="repost" cron="0 0/1 * * * ?"/>
+		<task:scheduled ref="weiboTask" method="startRepostThread" cron="0 0/2 * * * ?"/>
+		
 	</task:scheduled-tasks>
 	<!---->
 	<!-- 加载数据库配置文件 -->
