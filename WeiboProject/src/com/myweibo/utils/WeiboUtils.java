@@ -38,30 +38,28 @@ public class WeiboUtils {
 		}
 		return swl;
 	}
-	
 	/**
-	 * @Description: 获取我的首页中评论转发最多的一条
+	 * @Description:获取50最新公共微博 
+	 * @param @return
 	 * @param @throws Exception   
-	 * @return void  
+	 * @return List<Status>  
 	 * @throws
 	 * @author Panyk
-	 * @date 2015年12月30日
+	 * @date 2015年12月31日
 	 */
-	public String getIndexMostPopular() throws Exception{
-		String id = "";
+	public List<Status> getPublic() throws Exception{
+		List<Status> swl = null;
 		try{
 			Timeline tm = new Timeline(at);
-			//获取最新的公共微博，并转发其中转发量最高的一条
-//			StatusWapper sw = tm.getPublicTimeline(40, 0);
-			StatusWapper sw = tm.getFriendsTimeline();
-			List<Status> swl = sw.getStatuses();
-			id = this.getMaxRepostsAndcomments(swl);
+			StatusWapper sw = tm.getPublicTimeline(50, 0);
+			swl = sw.getStatuses();
 		}catch(Exception e){
-			log.error("repostIndexMostPopular", e);
+			log.error("getPublic", e);
 			throw e;
 		}
-		return id;
+		return swl;
 	}
+	
 	/**
 	 * @Description:获取（转发+评论）最多的一条 
 	 * @param @param sl
@@ -139,7 +137,7 @@ public class WeiboUtils {
 	 * @author Panyk
 	 * @date 2015年12月30日
 	 */
-	private List<WeiboEntity> doLikeAndNotLike(List<Status> swl) throws Exception{
+	public void doLikeAndNotLike(List<Status> swl) throws Exception{
 		List<WeiboEntity> weL = new ArrayList<WeiboEntity>();
 		String text = "";
 		boolean save;
@@ -161,19 +159,16 @@ public class WeiboUtils {
 				//粉丝数+关注数+收藏数
 				int count = u.getFollowersCount() + u.getFriendsCount() + u.getFavouritesCount();
 				if(count > 10000){
-					we.setUserId(s.getUser().getId());
+					WeiboQueue.addfollowQueue(s.getUser().getId());
 				}
-				we.setWbId(s.getId());
-				weL.add(we);
+				WeiboQueue.addrepostQueue(s.getId());
 			}
 		}
-		return weL;
 	}
 	
 	public static void main(String[] args) {
 		WeiboUtils wu = new WeiboUtils();
 		try {
-			wu.getIndexMostPopular();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
