@@ -19,7 +19,7 @@ public class WeiboDao {
 	 * @date 2015年12月30日
 	 */
 	public int addRepost(String id) throws Exception{
-		String sql = "insert into repost(id) values(?)";
+		String sql = "insert into repost(id,reposttime) values(?,now())";
 		return jdbcTemplate.update(sql, id);
 	}
 }

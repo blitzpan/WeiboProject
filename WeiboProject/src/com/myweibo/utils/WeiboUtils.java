@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import com.myweibo.entity.WeiboEntity;
+import com.myweibo.entity.WeiboQueue;
 
 import weibo4j.Timeline;
 import weibo4j.model.Status;
@@ -16,6 +17,27 @@ import weibo4j.model.User;
 public class WeiboUtils {
 	Logger log = Logger.getLogger(this.getClass());
 	public static String at = "2.00Hp8ZeC1rOq2C7a23d0528aB4paQC";
+	/**
+	 * @Description: 获取我的首页
+	 * @param @return
+	 * @param @throws Exception   
+	 * @return List<Status>  
+	 * @throws
+	 * @author Panyk
+	 * @date 2015年12月31日
+	 */
+	public List<Status> getIndex() throws Exception{
+		List<Status> swl = null;
+		try{
+			Timeline tm = new Timeline(at);
+			StatusWapper sw = tm.getFriendsTimeline();
+			swl = sw.getStatuses();
+		}catch(Exception e){
+			log.error("getIndex", e);
+			throw e;
+		}
+		return swl;
+	}
 	
 	/**
 	 * @Description: 获取我的首页中评论转发最多的一条
@@ -49,7 +71,7 @@ public class WeiboUtils {
 	 * @author Panyk
 	 * @date 2015年12月30日
 	 */
-	private String getMaxRepostsAndcomments(List<Status> sl){
+	public String getMaxRepostsAndcomments(List<Status> sl){
 		String tempId = "";
 		int max = 0;
 		for(Status s:sl){
@@ -68,6 +90,9 @@ public class WeiboUtils {
 		if(max < 0){//转发+评论 > 2000 返回
 			tempId = "";
 		}
+		//加入到转发队列中
+		log.debug("最高评论加转发加入到转发队列。id=" + tempId);
+		WeiboQueue.addrepostQueue(tempId);
 		return tempId;
 	}
 	/**

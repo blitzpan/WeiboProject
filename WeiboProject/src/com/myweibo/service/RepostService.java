@@ -16,7 +16,7 @@ public class RepostService {
 	private WeiboDao weiboDao;
 	@Autowired
 	private WeiboUtils weiboUtils;
-	private Logger log = Logger.getLogger(RepostService.class);
+	private Logger log = Logger.getLogger(this.getClass());
 	private Thread rt = null;
 	private boolean isRunning = true;
 	private long sleepTime = 1000 * 60;
@@ -26,7 +26,7 @@ public class RepostService {
 	}
 	
 	public void start() throws Exception{
-		if(rt !=null && !rt.isAlive()){
+		if(rt == null || !rt.isAlive()){
 			rt = new Thread(new RepostThread());
 			rt.start();
 		}
