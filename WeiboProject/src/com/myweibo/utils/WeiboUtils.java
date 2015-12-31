@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.myweibo.entity.WeiboEntity;
 import com.myweibo.entity.WeiboQueue;
 
+import weibo4j.Friendships;
 import weibo4j.Timeline;
 import weibo4j.model.Status;
 import weibo4j.model.StatusWapper;
@@ -17,6 +18,18 @@ import weibo4j.model.User;
 public class WeiboUtils {
 	Logger log = Logger.getLogger(this.getClass());
 	public static String at = "2.00Hp8ZeC1rOq2C7a23d0528aB4paQC";
+	
+	public void createFriendShip() throws Exception{
+		String id = WeiboQueue.followQueue.poll();
+		if(id!=null && id.length() > 0){
+			Friendships fs = new Friendships(at);
+			try{
+				fs.createFriendshipsById(id);
+			}catch(Exception e){
+				WeiboQueue.followQueue.add(id);
+			}
+		}
+	}
 	/**
 	 * @Description: 获取我的首页
 	 * @param @return

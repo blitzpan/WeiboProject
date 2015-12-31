@@ -26,13 +26,13 @@ public class WeiboService {
 	 */
 	public void repostIndexMostPopular() throws Exception{
 		try{
-			String id = weiboUtils.getIndexMostPopular();
+			/*String id = weiboUtils.getIndexMostPopular();
 			if(id!=null && id.length()>0){
 				if(weiboDao.addRepost(id)>0){
 					weiboUtils.repost(id);
 					log.info("转发微博id=" + id);
 				}				
-			}
+			}*/
 		}catch(Exception e){
 			log.error("repostIndexMostPopular=", e);
 			throw e;
