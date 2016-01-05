@@ -27,6 +27,7 @@ public class RepostService {
 	
 	public void start() throws Exception{
 		if(rt == null || !rt.isAlive()){
+			log.debug("RepostService.start()");
 			rt = new Thread(new RepostThread());
 			rt.start();
 		}
@@ -37,7 +38,7 @@ public class RepostService {
 	}
 	class RepostThread implements Runnable {
 		public void run() {
-			log.info("RepostThread start.");
+			log.info("RepostThread run.");
 			while (isRunning) {
 				try {
 					while(true){
