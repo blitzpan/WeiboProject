@@ -19,7 +19,7 @@ public class RepostService {
 	private Logger log = Logger.getLogger(this.getClass());
 	private Thread rt = null;
 	private boolean isRunning = true;
-	private long sleepTime = 1000 * 60;
+	private long sleepTime = 1000 * 60*46;
 	
 	public RepostService(){
 		
@@ -40,15 +40,21 @@ public class RepostService {
 			log.info("RepostThread start.");
 			while (isRunning) {
 				try {
-					if(!WeiboQueue.repostQueue.isEmpty()){
-						String wbid = WeiboQueue.repostQueue.poll();
-						try{
-							if(wbid != null && weiboDao.addRepost(wbid)>0){
-								weiboUtils.repost(wbid);
-								log.info("转发微博id=" + wbid);
+					while(true){
+						if(!WeiboQueue.repostQueue.isEmpty()){
+							String wbid = WeiboQueue.repostQueue.poll();
+							try{
+								if(wbid != null && weiboDao.getCountById(wbid)<=0){
+									weiboDao.addRepost(wbid);
+									weiboUtils.repost(wbid);
+									log.info("转发微博id=" + wbid);
+									break;
+								}
+							}catch(Exception e){
+								log.error("转发微博error。id=",e);
 							}
-						}catch(Exception e){
-							log.error("转发微博error。id=",e);
+						}else{
+							break;
 						}
 					}
 				} catch (Exception e) {

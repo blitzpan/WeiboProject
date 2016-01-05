@@ -24,7 +24,7 @@ public class PublicAnalyzeService {
 	private Logger log = Logger.getLogger(this.getClass());
 	private Thread rt = null;
 	private boolean isRunning = true;
-	private long sleepTime = 1000 * 60;
+	private long sleepTime = 1000 * 60*40;
 	
 	public PublicAnalyzeService(){
 		

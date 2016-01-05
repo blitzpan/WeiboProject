@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.myweibo.dao.WeiboDao;
-import com.myweibo.entity.WeiboQueue;
 import com.myweibo.utils.WeiboUtils;
 
 import weibo4j.model.Status;
@@ -26,7 +24,7 @@ public class IndexAnalyzeService {
 	private Logger log = Logger.getLogger(this.getClass());
 	private Thread rt = null;
 	private boolean isRunning = true;
-	private long sleepTime = 1000 * 60;
+	private long sleepTime = 1000 * 60*40;//40分钟
 	
 	public IndexAnalyzeService(){
 		

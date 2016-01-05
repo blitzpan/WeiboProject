@@ -19,8 +19,7 @@ public class WeiboUtils {
 	Logger log = Logger.getLogger(this.getClass());
 	public static String at = "2.00Hp8ZeC1rOq2C7a23d0528aB4paQC";
 	
-	public void createFriendShip() throws Exception{
-		String id = WeiboQueue.followQueue.poll();
+	public void createFriendShip(String id) throws Exception{
 		if(id!=null && id.length() > 0){
 			Friendships fs = new Friendships(at);
 			try{
@@ -98,12 +97,13 @@ public class WeiboUtils {
 			log.debug(s);
 			log.debug("------------------------------------");
 		}
-		if(max < 0){//转发+评论 > 2000 返回
+		if(max > 2000){//转发+评论 > 2000 返回
+			//加入到转发队列中
+			log.debug("最高评论加转发加入到转发队列。id=" + tempId);
+			WeiboQueue.addrepostQueue(tempId);
+		}else{
 			tempId = "";
 		}
-		//加入到转发队列中
-		log.debug("最高评论加转发加入到转发队列。id=" + tempId);
-		WeiboQueue.addrepostQueue(tempId);
 		return tempId;
 	}
 	/**
@@ -122,6 +122,7 @@ public class WeiboUtils {
 				tm.repost(id);
 			}
 		}catch(Exception e){
+			WeiboQueue.addrepostQueue(id);
 			log.error("repost",e);
 			throw e;
 		}
@@ -154,7 +155,6 @@ public class WeiboUtils {
 		List<WeiboEntity> weL = new ArrayList<WeiboEntity>();
 		String text = "";
 		boolean save;
-		WeiboEntity we = null;
 		User u = null;
 		for(Status s:swl){
 			save = false;
@@ -163,11 +163,10 @@ public class WeiboUtils {
 				save = true;
 			}
 			//过滤敏感微博
-			if(s.getText().contains("转发抽奖平台")){
+			if(s.getText().contains("转发抽奖平台") || s.getText().contains("瘦身神器")){
 				save = false;
 			}
 			if(save){
-				we = new WeiboEntity();
 				u = s.getUser();
 				//粉丝数+关注数+收藏数
 				int count = u.getFollowersCount() + u.getFriendsCount() + u.getFavouritesCount();

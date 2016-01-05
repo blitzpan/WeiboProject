@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.myweibo.dao.FriendshipsDao;
+import com.myweibo.entity.WeiboQueue;
 import com.myweibo.utils.WeiboUtils;
 /**
  * ClassName: FriendService 
@@ -17,10 +19,12 @@ import com.myweibo.utils.WeiboUtils;
 public class FriendService {
 	@Autowired
 	private WeiboUtils weiboUtils;
+	@Autowired
+	private FriendshipsDao friendshipsDao;
 	private Logger log = Logger.getLogger(this.getClass());
 	private Thread rt = null;
 	private boolean isRunning = true;
-	private long sleepTime = 1000 * 60 * 60;
+	private long sleepTime = 1000 * 60 * 40;
 	
 	public FriendService(){
 		
@@ -39,10 +43,20 @@ public class FriendService {
 		public void run() {
 			log.info("FriendThread start.");
 			while (isRunning) {
-				try {
-					weiboUtils.createFriendShip();
-				} catch (Exception e) {
-					log.error("FriendThread error.", e);
+				while(true){
+					try {
+						if(!WeiboQueue.followQueue.isEmpty()){
+							String uid = WeiboQueue.followQueue.poll();
+							if(uid != null && friendshipsDao.getCountById(uid)<=0){
+								friendshipsDao.addFriend(uid);
+								weiboUtils.createFriendShip(uid);
+							}
+						}else{
+							break;
+						}
+					} catch (Exception e) {
+						log.error("FriendThread error.", e);
+					}
 				}
 				try{
 					Thread.sleep(sleepTime);

@@ -22,4 +22,8 @@ public class WeiboDao {
 		String sql = "insert into repost(id,reposttime) values(?,now())";
 		return jdbcTemplate.update(sql, id);
 	}
+	public int getCountById(String id) throws Exception{
+		String sql = "select count(*) from repost where id=?";
+		return jdbcTemplate.queryForInt(sql, id);
+	}
 }
