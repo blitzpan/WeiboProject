@@ -26,7 +26,7 @@ public class IndexAnalyzeService {
 	private Logger log = Logger.getLogger(this.getClass());
 	private Thread rt = null;
 	private boolean isRunning = true;
-	private long sleepTime = 1000 * 60;
+	private long sleepTime = 1000 * 60 * 30;
 	
 	public IndexAnalyzeService(){
 		
@@ -34,6 +34,7 @@ public class IndexAnalyzeService {
 	
 	public void start() throws Exception{
 		if(rt == null || !rt.isAlive()){
+			log.debug("IndexAnalyzeService.start()");
 			rt = new Thread(new IndexAnalyzeThread());
 			rt.start();
 		}
@@ -43,7 +44,7 @@ public class IndexAnalyzeService {
 	}
 	class IndexAnalyzeThread implements Runnable {
 		public void run() {
-			log.info("IndexAnalyzeThread start.");
+			log.info("IndexAnalyzeThread run.");
 			while (isRunning) {
 				try {
 					List<Status> sl = weiboUtils.getIndex();//我的首页

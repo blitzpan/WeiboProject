@@ -24,7 +24,7 @@ public class PublicAnalyzeService {
 	private Logger log = Logger.getLogger(this.getClass());
 	private Thread rt = null;
 	private boolean isRunning = true;
-	private long sleepTime = 1000 * 60;
+	private long sleepTime = 1000 * 60 * 35;
 	
 	public PublicAnalyzeService(){
 		
@@ -32,6 +32,7 @@ public class PublicAnalyzeService {
 	
 	public void start() throws Exception{
 		if(rt == null || !rt.isAlive()){
+			log.debug("PublicAnalyzeService.start()");
 			rt = new Thread(new PublicAnalyzeThread());
 			rt.start();
 		}
@@ -41,7 +42,7 @@ public class PublicAnalyzeService {
 	}
 	class PublicAnalyzeThread implements Runnable {
 		public void run() {
-			log.info("PublicAnalyzeService start.");
+			log.info("PublicAnalyzeService run.");
 			while (isRunning) {
 				try {
 					List<Status> sl = weiboUtils.getPublic();

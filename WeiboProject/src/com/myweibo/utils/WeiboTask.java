@@ -1,8 +1,6 @@
 package com.myweibo.utils;
 
 
-import java.util.Date;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -17,7 +15,8 @@ import com.myweibo.service.WeiboService;
  * @author Administrator
  */
 @Component
-@Scope("prototype")//每一个请求都有一个类来处理，避免线程安全问题。
+//@Scope("prototype")//每一个请求都有一个类来处理，避免线程安全问题。
+@Scope("singleton")
 public class WeiboTask {
 	@Autowired
 	private WeiboService weiboService;

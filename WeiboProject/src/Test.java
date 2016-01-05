@@ -1,28 +1,39 @@
+import java.io.BufferedReader;
 import java.io.IOException;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class Test {
-	public void fun(){
+	public String fun(){
+		StringBuilder sb = new StringBuilder("");
+		BufferedReader br = null;
 		try {
-			String url = "http://vip.stock.finance.sina.com.cn/mkt/#sge_gold";
-			Document doc = Jsoup.connect(url).get();
-			System.out.println(doc.text());
-			System.out.println("--------------------------------------------");
-			if(doc.text().contains("tbl_wrap")){
-				System.out.println("contains");
+			String url = "http://hq.sinajs.cn/rn=9pl6s&list=SGE_AU99_99";
+			URL realurl = new URL(url);
+			URLConnection conn = realurl.openConnection();
+			conn.connect();
+			br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String tempStr = "";
+			while((tempStr = br.readLine()) != null){
+				sb.append(tempStr);
 			}
-			Elements newsHeadlines = doc.select("#tbl_wrap");
-			System.out.println(newsHeadlines.text());
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+		}finally{
+			if(br != null){
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+		return sb.toString();
 	}
 	public static void main(String[] args) {
 		Test t = new Test();
-		t.fun();
+		System.out.println(t.fun());
 
 	}
 

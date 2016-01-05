@@ -28,6 +28,7 @@ public class FriendService {
 	
 	public void start() throws Exception{
 		if(rt == null || !rt.isAlive()){
+			log.debug("FriendService.start()");
 			rt = new Thread(new FriendThread());
 			rt.start();
 		}
@@ -37,7 +38,7 @@ public class FriendService {
 	}
 	class FriendThread implements Runnable {
 		public void run() {
-			log.info("FriendThread start.");
+			log.info("FriendThread run.");
 			while (isRunning) {
 				try {
 					weiboUtils.createFriendShip();

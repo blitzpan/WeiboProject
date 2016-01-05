@@ -24,8 +24,10 @@ public class WeiboUtils {
 		if(id!=null && id.length() > 0){
 			Friendships fs = new Friendships(at);
 			try{
+				log.info("关注id=" + id);
 				fs.createFriendshipsById(id);
 			}catch(Exception e){
+				log.error("关注friend。id="+id+"异常", e);
 				WeiboQueue.followQueue.add(id);
 			}
 		}
