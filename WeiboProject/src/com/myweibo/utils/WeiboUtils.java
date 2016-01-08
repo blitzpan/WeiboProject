@@ -179,6 +179,26 @@ public class WeiboUtils {
 			}
 		}
 	}
+	/**
+	 * @Description: 发一条
+	 * @param @param str
+	 * @param @throws Exception   
+	 * @return void  
+	 * @throws
+	 * @author Panyk
+	 * @date 2016年1月8日
+	 */
+	public void updateStatus(String str) throws Exception{
+		Status s = null;
+		try{
+			Timeline tl = new Timeline(at);
+			s = tl.updateStatus(str);
+			log.debug("updateStatus status=" + s);
+		}catch(Exception e){
+			log.error("updateStatus发微博异常。", e);
+			throw e;
+		}
+	}
 	
 	public static void main(String[] args) {
 		WeiboUtils wu = new WeiboUtils();
