@@ -1,5 +1,6 @@
 package com.myweibo.entity;
 
+import java.util.Iterator;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.apache.log4j.Logger;
@@ -25,6 +26,14 @@ public class WeiboQueue {
 				followQueue.add(id);
 		}catch(Exception e){
 			log.error("addfollowQueue",e);
+		}
+	}
+	public static void showRepostQueue(){
+		Iterator i = repostQueue.iterator();
+		log.debug("showRepostQueue=");
+		while(i.hasNext()){
+			String str = (String)i.next();
+			log.debug(str);
 		}
 	}
 }
