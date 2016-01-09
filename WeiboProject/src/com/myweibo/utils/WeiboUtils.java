@@ -192,6 +192,9 @@ public class WeiboUtils {
 		Status s = null;
 		try{
 			Timeline tl = new Timeline(at);
+			if(str.length()>140){
+				str = str.substring(0, 139);
+			}
 			s = tl.updateStatus(str);
 			log.debug("updateStatus status=" + s);
 		}catch(Exception e){

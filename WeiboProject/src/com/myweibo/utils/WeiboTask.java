@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.myweibo.service.IndexAnalyzeService;
+import com.myweibo.service.JokeService;
 import com.myweibo.service.RepostService;
 import com.myweibo.service.WeiboService;
 
@@ -24,6 +25,8 @@ public class WeiboTask {
 	private RepostService repostService;
 	@Autowired
 	private IndexAnalyzeService indexAnalyzeService;
+	@Autowired
+	private JokeService jokeService;
 	
 	Logger log = Logger.getLogger(WeiboTask.class);
 	/**
@@ -39,6 +42,7 @@ public class WeiboTask {
 		try {
 			repostService.start();
 			indexAnalyzeService.start();
+			jokeService.start();
 		} catch (Exception e) {
 			log.error("startThread error=", e);
 		}
