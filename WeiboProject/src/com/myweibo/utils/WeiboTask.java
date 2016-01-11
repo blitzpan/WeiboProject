@@ -40,8 +40,8 @@ public class WeiboTask {
 	public void startThread(){
 		log.info("startThread start.");
 		try {
-			repostService.start();
-			indexAnalyzeService.start();
+//			repostService.start();
+//			indexAnalyzeService.start();
 			jokeService.start();
 		} catch (Exception e) {
 			log.error("startThread error=", e);

@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.myweibo.entity.ImgJoke;
 import com.myweibo.entity.Joke;
 
 @Repository
@@ -28,4 +29,17 @@ public class JokeDao {
 		String sql = "update joke set sendC=sendc+1 where id=?";
 		return jdbcTemplate.update(sql,joke.getId());
 	}
+	
+	public ImgJoke getImgJoke(ImgJoke joke) throws Exception{
+		String sql = "select * from imgjoke where 1=1";
+		sql += " ORDER BY sendc asc LIMIT 0,1";
+		return jdbcTemplate.queryForObject(sql, new BeanPropertyRowMapper(ImgJoke.class));
+	}
+	public int upImgJokeSendC(ImgJoke joke) throws Exception{
+		String sql = "update imgjoke set sendC=? where id=?";
+		return jdbcTemplate.update(sql,joke.getSendc(), joke.getId());
+	}
+	
+	
+	
 }

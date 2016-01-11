@@ -1,8 +1,10 @@
 package com.myweibo.utils;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +13,7 @@ import com.myweibo.entity.WeiboQueue;
 
 import weibo4j.Friendships;
 import weibo4j.Timeline;
+import weibo4j.http.ImageItem;
 import weibo4j.model.Status;
 import weibo4j.model.StatusWapper;
 import weibo4j.model.User;
@@ -180,7 +183,7 @@ public class WeiboUtils {
 		}
 	}
 	/**
-	 * @Description: 发一条
+	 * @Description: 发一条文字微博
 	 * @param @param str
 	 * @param @throws Exception   
 	 * @return void  
@@ -196,6 +199,24 @@ public class WeiboUtils {
 				str = str.substring(0, 139);
 			}
 			s = tl.updateStatus(str);
+			log.debug("updateStatus status=" + s);
+		}catch(Exception e){
+			log.error("updateStatus发微博异常。", e);
+			throw e;
+		}
+	}
+	
+	public void updateStatus(String str, String path) throws Exception{
+		Status s = null;
+		try{
+			Timeline tl = new Timeline(at);
+			if(str.length()>140){
+				str = str.substring(0, 139);
+			}
+			str = java.net.URLEncoder.encode(str, "utf-8");
+			byte[] data = IOUtils.toByteArray(new FileInputStream(path));
+			ImageItem img = new ImageItem(data);
+			tl.uploadStatus(str, img);
 			log.debug("updateStatus status=" + s);
 		}catch(Exception e){
 			log.error("updateStatus发微博异常。", e);

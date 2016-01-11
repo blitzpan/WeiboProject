@@ -1,12 +1,17 @@
 package com.myweibo.service;
 
+import java.io.File;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.myweibo.dao.JokeDao;
+import com.myweibo.entity.Constents;
+import com.myweibo.entity.ImgJoke;
 import com.myweibo.entity.Joke;
+import com.myweibo.utils.JokeTypeUtils;
 import com.myweibo.utils.WeiboUtils;
 
 @Service
@@ -41,10 +46,38 @@ public class JokeService {
 			String msg = "";
 			while (isRunning) {
 				try {
-					Joke j = jokeDao.getJoke(null);
-					jokeDao.upJokeSendC(j);
-					msg = j.getContent();
-					weiboUtils.updateStatus(msg);
+					int type = JokeTypeUtils.getJokeType();
+					
+					type = type==2?0:type;
+					type = 1;
+					
+					switch(type){
+					case 1://图片
+						ImgJoke ij = null;
+						boolean flag = true;
+						while(flag){
+							ij = jokeDao.getImgJoke(null);
+							String fileName = ij.getFilename();
+							File f = new File(Constents.imgPath + File.separator + fileName);
+							if(!f.exists()){
+								ij.setSendc(1000);
+								jokeDao.upImgJokeSendC(ij);
+								continue;
+							}
+							ij.setSendc(ij.getSendc() + 1);
+							jokeDao.upImgJokeSendC(ij);
+							break;
+						}
+						weiboUtils.updateStatus(ij.getTitle(), Constents.imgPath + File.separator + ij.getFilename());
+						break;						
+					default://文字
+						Joke j = jokeDao.getJoke(null);
+						jokeDao.upJokeSendC(j);
+						msg = j.getContent();
+						weiboUtils.updateStatus(msg);
+						break;
+					}
+					
 				} catch (Exception e) {
 					log.error("JokeThread error.", e);
 				}
